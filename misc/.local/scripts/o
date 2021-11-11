@@ -1,0 +1,6 @@
+#!/bin/bash
+[ $# -eq 0 ] && exit 1
+# [ ! -f $@ ] && exit 1
+[ ! -f "$*" ] && exit 1
+
+setsid xdg-open "$1" &

@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# bakd - Google Drive sync with rclone
+#
+# ---------------------------------------------------------------------------
+
+############################## SCRIPT SETTINGS ##############################
+
+# Remote name
+remote="gddr"
+
+# Local directories you want to sync
+dir=(
+    "$HOME/.local/share/calibre"
+    "$HOME/proxectos"
+    "$HOME/.local/scripts"
+    "$HOME/docs"
+    "$HOME/.dotfiles"
+)
+
+# Remote directory (keep a trailing slash).
+# Don't write any content if you want to sync in Google Drive root folder.
+bakdir="PC/"
+
+# File name for excluding patterns.
+# https://rclone.org/filtering/#exclude-from-read-exclude-patterns-from-file
+excludefile=".ignore"
+
+# ---------------------------------------------------------------------------
+
+# BEGIN SCRIPT 
+
+# Check if rclone is installed
+[ ! -e /usr/bin/rclone ] && echo "rclone is not installed." && exit 1;
+
+# Check if there is a Internet connection available
+if ! ping -c2 www.google.com &>/dev/null; then
+    echo "No internet connection available." && exit 2
+fi
+
+# Begin sync
+# Loop over the array
+for i in "${dir[@]}"
+do
+    # Check if the selected folder exists.
+    [ ! -d "$i" ] && echo "Looks like the folder '$i' does not exist or it is not a folder." && exit 2
+
+    # By default create $excludefile if the variable is set, and include itself.
+    [ -n "$excludefile" ] && [ ! -e "$i/$excludefile" ] && echo -e "$excludefile\n.git/**" > "$i/$excludefile"
+
+    echo "Syncing '$i'..."
+    /usr/bin/rclone sync --exclude-from "$i/$excludefile" --update -v -P -L --checkers 8 --contimeout 60s --timeout 300s --retries 3 --drive-use-trash --drive-export-formats ods,odt,odp "$i" "$remote:$bakdir$(basename "$i")"
+    echo
+done
+
+# END SCRIPT

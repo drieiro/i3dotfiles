@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# Picture in Picture mode for focused X window on i3wm
+#
+# i3 config:
+# bindsym $mod+Shift+s floating enable, sticky enable ; exec --no-startup-id xpip
+
+
+# Get active screen and resolution
+{ read screen_name max_x max_y ; } < <(xrandr -q | awk '/\ connected/ && /[[:digit:]]x[[:digit:]].*+/{ gsub("x|+", " ", $0); print $1 " " $4 " " $5}' 2>/dev/null)
+
+if [ "$max_x" -eq "2560" ]; then
+    # Force max_x to 1920 instead of 2560, so the window will resize on 16:9 instead of 21:9
+    windowsizex=$(bc <<<"1920*40/100")
+else
+    windowsizex=$(bc <<<"$max_x*40/100")
+fi
+windowsizey=$(bc <<<"$max_y*40/100")
+
+winid=$(xdotool getwindowfocus)
+
+xdotool windowsize $winid $windowsizex $windowsizey
+xdotool windowmove $winid $(( $max_x-$windowsizex ))  $(( $max_y-$windowsizey ))
+i3-msg "floating enable, sticky enable"

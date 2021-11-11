@@ -1,0 +1,113 @@
+#!/bin/sh
+#
+#   __ _  ___ _ __  _ __   __ _ ___ ___ 
+#  / _` |/ _ \ '_ \| '_ \ / _` / __/ __|
+# | (_| |  __/ | | | |_) | (_| \__ \__ \
+#  \__, |\___|_| |_| .__/ \__,_|___/___/
+#   __/ |          | |                  
+#  |___/           |_|                  
+#
+#
+# --------------------------------------------------------
+
+
+### User configuration variables
+
+# Default password length
+default_num_characters="48"
+
+# Default generator mode
+default_mode="strong" # normal
+
+# Enable or disable display password on terminal
+show_pass="true" # false
+
+
+# --------------------------------------------------------
+
+
+# Main variables
+scriptname="genpass"
+version="2021.03.19.1"
+num_characters="${1:-$default_num_characters}"
+mode="${2:-$default_mode}"
+
+# Functions
+usage () {
+
+    cat << "EOF"
+
+   __ _  ___ _ __  _ __   __ _ ___ ___ 
+  / _` |/ _ \ '_ \| '_ \ / _` / __/ __|
+ | (_| |  __/ | | | |_) | (_| \__ \__ \
+  \__, |\___|_| |_| .__/ \__,_|___/___/
+   __/ |          | |                  
+  |___/           |_|                  
+
+
+genpass [num_characters] [mode]
+
+Opciones:
+    num_characters: indica la longitud de la contraseña. Por defecto son 48 caracteres.
+    mode: selecciona el tipo de contraseña. El modo por defecto es strong.
+        normal: contraseña con números y letras.
+        strong: contraseña con números, letras y caracteres especiales.
+        
+Ejemplos:
+    genpass
+    genpass 25
+    genpass 25 normal
+
+EOF
+echo "--"
+echo "$scriptname - v.$version"
+}
+
+checks () {
+
+    # Check if $num_characters is a number
+    if echo "$num_characters" | grep -qEv '^[0-9]+$'; then
+         echo "num_characters debe ser un número." && echo "Ejecuta '$scriptname -h' para más información." && exit 1
+    fi
+
+    # Check $num_characters length
+    [ "$num_characters" -le 5 ] && echo "Selecciona una longitud mayor o igual a 6." && exit 2
+
+    # Check if $mode is normal or strong
+    if [ $mode != 'strong' ] && [ $mode != 'normal' ]; then
+        echo "mode debe ser 'normal' o 'strong'" && echo "Ejecuta '$scriptname -h' para más información." && exit 3
+    fi
+}
+
+main () {
+
+    # Run checks
+    checks
+    
+    # Generate passwords depending on what mode is selected
+    if [ "$mode" = "normal" ]; then
+        pass="$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c "$num_characters")"
+    elif [ "$mode" = "strong" ]; then
+        pass="$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' < /dev/urandom | head -c "$num_characters")"
+    fi
+
+    # Show password and save on clipboard
+    if [ "$show_pass" = "true" ]; then
+        echo "Contraseña aleatoria:\n\n$pass\n"
+    fi
+
+    # Copy password to clipboard with xclip
+    if ! type xclip >/dev/null 2>&1; then 
+        echo "xclip no se encuentra instalado en el sistema. No ha sido posible copiar la contraseña al portapapeles" && exit 4
+    fi
+    echo "$pass" | tr -d '\n' | xclip -sel clip && echo "Contraseña copiada al portapapeles"
+}
+
+if [ $# -le 2 ]; then
+    if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+        usage && exit 0
+    fi
+    main "$@"
+else
+    usage
+fi

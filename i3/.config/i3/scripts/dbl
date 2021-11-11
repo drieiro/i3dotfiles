@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#
+# dbl - i3block blocklet for backlight
+#
+
+# Set default laptop's screen name
+laptop="eDP1"
+
+get_active_monitors() { 
+    xrandr | awk '/\ connected/ && /[[:digit:]]x[[:digit:]].*+/{print $1}' 2>/dev/null
+}
+get_active_monitors | grep -q "$laptop" || exit 0
+
+case $BLOCK_BUTTON in
+    4) xbacklight -inc 5 ;;
+    5) xbacklight -dec 5 ;;
+esac
+
+bl=$(xbacklight -get)
+echo "盛 ${bl%.*}%"

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#
+# cleanvim - Clean no necessary files on nvim's undodir
+# https://www.reddit.com/r/vim/comments/6hnt7c/how_do_you_keep_your_undodir_clean/diztlc0/
+#
+
+for undo_file in ~/.cache/nvim/undodir/*
+do
+  [ -e "$undo_file" ] || continue
+  real_file=$(basename "$undo_file" | sed 's:%:/:g')
+  ([ -e "$real_file" ] || (rm -- "$undo_file" && echo "'$undo_file' deleted"))
+done

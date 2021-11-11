@@ -1,0 +1,66 @@
+#!/bin/sh
+
+# 
+# dpl - manage a YouTube playlist with dmenu
+#
+
+# Check dependencies
+[ ! -x "$(command -v dmenu)" ] && echo "dmenu is not installed or executable." && exit 1
+[ ! -x "$(command -v mpv)" ] && echo "mpv is not installed or executable." && exit 2
+[ ! -x "$(command -v jq)" ] && echo "jq is not installed or executable." && exit 2
+
+# Global variables
+datadir="${XDG_DATA_HOME:-$HOME/.local/share}/dplaylist"
+listfile="$datadir/vidlist"
+logfile="/tmp/dplaylist_$(date "+%Y-%m-%d")"
+
+[ -d "$datadir" ] || mkdir "$datadir"
+
+# Main functions
+checklist () {
+    if [ ! -s "$listfile" ]; then
+        echo '#!/bin/sh' > "$listfile"
+        echo 'vidlist="' >> "$listfile"
+        echo '"' >> "$listfile"
+    fi
+}
+
+add () {
+    title=$(curl -s https://www.youtube.com/oembed\?format\=json\&url\=$1 | jq '.title' | tr -d \")
+    [ -z "$title" ] && echo "No se ha podido obtener el título del vídeo." && exit 3
+    sed -i "/^vidlist/a $title 	$1" "$listfile"
+}
+
+remove () {
+    sed -i "/$1/d" "$listfile"
+}
+
+help () {
+    cat << EOF
+
+dplaylist - manage a playlist with dmenu
+
+    Optional parameters:
+
+    -a, --add: Add videos to the playlist
+        Example: dpl -a https://youtu.be/jNQXAC9IVRw
+    -r, --rm: Remove videos of the playlist specifying a pattern
+        Example: dpl -r "Linux"
+    -h, --help: Show this help.
+
+EOF
+}
+
+main () {
+    checklist
+    . "$listfile"
+    echo "$vidlist" | grep -P "^$(echo "$vidlist" | grep "https:" | sed 's/\t.*//g' | dmenu -i -p "Selecciona que ver:" -l 20 | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv --log-file="$logfile"
+}
+
+
+case "$1" in
+    -a|--add) add $2 ;;
+    -r|--rm) remove $2 ;;
+    -h|--help) help ;;
+    *) main ;;
+esac

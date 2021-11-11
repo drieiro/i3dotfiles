@@ -1,0 +1,131 @@
+#!/bin/bash
+
+#
+# krypton - encrypt or decrypt files
+#
+
+##############################################################
+
+# Add here your GPG keypair. Usually it's your email address.
+# See: https://www.redhat.com/sysadmin/creating-gpg-keypairs
+pubkey="riesp@pm.me"
+
+##############################################################
+
+
+if ! type gpg &>/dev/null; then echo "gpg no se encuentra instalado en el sistema." && exit 1; fi
+version="2021.10.29.1"
+
+usage () {
+    cat << EOF
+  _  __                 _              
+ | |/ /                | |             
+ | ' / _ __ _   _ _ __ | |_ ___  _ __  
+ |  < | '__| | | | '_ \| __/ _ \| '_ \ 
+ | . \| |  | |_| | |_) | || (_) | | | |
+ |_|\_\_|   \__, | .__/ \__\___/|_| |_|
+             __/ | |                   
+            |___/|_|   v$version                  
+
+Uso:
+
+    $ krypton -e
+        Encripta todos los archivos del directorio actual y de todos los subdirectorios.
+
+    $ krypton -d
+        Desencripta todos los archivos del directorio actual y de todos los subdirectorios.
+
+    $ krypton -f file
+        Encripta el fichero "file"
+
+    $ krypton -x file
+        Desencripta el fichero "file"
+
+    $ krypton -h
+        Muestra esta ayuda.
+
+EOF
+}
+
+
+# Delete function
+# After encrypting/decrpyting files, this function will ask if you want to remove original/encrypted files.
+# Parameter $1 will contain the command used to delete the files.
+deletefile () {
+select delete in "Sí" "No"; do
+    case "$delete" in
+        Sí) echo "$1" | sh -e && break ;;
+        No) echo "OK!" && exit 0 ;;
+        *) echo "No sé a qué te refieres con eso."
+    esac
+done
+}
+
+# File encryption
+encrypt () {
+    if find ./* -type f -print0 | while read -rd $'\0' i; do 
+            if gpg -r $pubkey --output "$i.pgp" --encrypt "$i"; then
+                echo "Fichero '$i' cifrado..."
+            else
+                echo "No ha sido posible cifrar el fichero '$i'..."
+            fi
+        done && echo "Hecho"
+    then
+        echo "¿Eliminar los ficheros originales? [ 1 / 2 ]"
+        deletefile "find ./* ! -name '*.pgp' -type f -exec rm -rf {} \; && echo 'Hecho'"
+    else
+        echo "Algo ha fallado. Saliendo." && exit 3
+    fi
+}
+
+# File decryption
+decrypt () {
+    if find ./* -type f -name '*.pgp' -print0 | while read -rd $'\0' i; do 
+            # Encrypted file's name should end with .pgp. Get the filename without this extension.
+            name=${i%.*}
+            if gpg -q -r $pubkey --output "$name" --decrypt "$i"; then
+                echo "Fichero '$i' descifrado..."
+            else
+                echo "No se ha podido descifrar el fichero '$i'..."
+            fi
+        done && echo "Hecho"
+    then
+        echo "¿Eliminar los ficheros originales encriptados? [ 1 / 2 ]"
+        deletefile "find ./* -name '*.pgp' -type f -exec rm -rf {} \; && echo 'Hecho'"
+    else
+        echo "Algo ha fallado. Saliendo." && exit 2
+    fi
+}
+
+f_encrypt () {
+    file="$1"
+    if gpg -r $pubkey --output "$file.pgp" --encrypt "$file"; then
+        echo "Fichero '$file' cifrado..." && \
+        echo "¿Eliminar el fichero original? [ 1 / 2 ]"
+        deletefile "rm -f \"$file\" && echo 'Hecho'"
+    else
+        echo "No ha sido posible cifrar el fichero '$file'..." && exit 2
+    fi
+}
+
+f_decrypt () {
+    file="$1"
+    # Encrypted file's name should end with .pgp. Get the filename without this extension.
+    name=${file%.*}
+    if gpg -q -r $pubkey --output "$name" --decrypt "$file"; then
+        echo "Fichero '$file' descifrado..." && \
+        echo "¿Eliminar el fichero encriptado? [ 1 / 2 ]"
+        deletefile "rm -f \"$file\" && echo 'Hecho'"
+    else
+        echo "No ha sido posible descifrar el fichero '$file'..." && exit 3
+    fi
+}
+
+
+case "$1" in
+    -e) encrypt ;;
+    -d) decrypt ;;
+    -f) f_encrypt "$2" ;;
+    -x) f_decrypt "$2" ;;
+    -h|--help|*) usage ;;
+esac

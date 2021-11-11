@@ -1,0 +1,13 @@
+#!/bin/sh
+# https://github.com/dylanaraps/bin/blob/master/n
+
+file="$HOME/Dropbox/notas.txt"
+
+[ $# -eq 0 ] && exit 0
+
+if [ $1 = "-l" ]; then
+    cat $file
+    exit 0
+fi
+
+printf '%s\n' "$(date +%d/%m/%y-%H:%M:%S) -> $*" >> $file

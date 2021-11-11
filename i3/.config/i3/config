@@ -1,0 +1,320 @@
+# i3 config file (v4)
+#
+# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+# Set mod key (Mod1=<Alt>, Mod4=<Super>)
+set $mod Mod4
+
+workspace_auto_back_and_forth yes
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# Font for window titles.
+font pango:RobotoMono Nerd Font 10
+
+# Colors
+set $bg-color            #1d2021
+set $inactive-bg-color   #1d2021
+set $text-color          #fbf1c7
+set $inactive-text-color #665c54
+set $urgent-bg-color     #83a598
+set $blue-color          #458588
+
+# i3-gaps
+gaps outer 10
+gaps inner 5
+# smart_gaps on
+
+# Hiding borders adjacent to the screen edges
+hide_edge_borders smart
+new_window pixel 2
+# Fibonacci layout
+default_orientation vertical # start in opposite orientation from your monitor
+for_window [class="^.*"] split toggle border pixel 2
+
+# Start a terminal
+bindsym $mod+Return exec --no-startup-id alacritty
+bindsym $mod+Shift+Return exec --no-startup-id alacritty --working-directory "$(readlink -e /proc/"$(pgrep -oP "$(xdo pid)")"/cwd)"
+
+# Start GUI file manager
+bindsym $mod+f exec --no-startup-id thunar &
+
+# Start web browser
+bindsym $mod+n exec --no-startup-id firefox &
+
+# Start Telegram
+bindsym $mod+t exec --no-startup-id telegram &
+
+# kill focused window
+bindsym $mod+q kill
+
+# start dmenu (a program launcher)
+bindsym $mod+d exec --no-startup-id dmenu_run -i
+
+# rofi
+# bindsym $mod+o exec --no-startup-id i3-dmenu-desktop --dmenu='rofi -i -dmenu -show-icons -show run -theme slate'
+bindsym $mod+o exec --no-startup-id rofi -i -show drun
+
+# wallpaper script
+bindsym $mod+Shift+p exec --no-startup-id wlp
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split orientation
+bindsym $mod+z split h;exec --no-startup-id notify-send 'tile horizontally'
+bindsym $mod+v split v;exec --no-startup-id notify-send 'tile vertically'
+
+# enter fullscreen mode for the focused container
+bindsym $mod+Shift+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# Sticky window
+bindsym $mod+Shift+s floating enable, sticky enable ; exec --no-startup-id ~/.config/i3/scripts/xpip
+
+# focus the child container
+#bindsym $mod+d focus child
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+# switch to workspace with numpad keys
+bindcode $mod+87 workspace 1
+bindcode $mod+88 workspace 2
+bindcode $mod+89 workspace 3
+bindcode $mod+83 workspace 4
+bindcode $mod+84 workspace 5
+bindcode $mod+85 workspace 6
+bindcode $mod+79 workspace 7
+bindcode $mod+80 workspace 8
+bindcode $mod+81 workspace 9
+bindcode $mod+90 workspace 10
+
+# switch to workspace with numlock numpad keys
+bindcode $mod+Mod2+87 workspace $ws1
+bindcode $mod+Mod2+88 workspace $ws2
+bindcode $mod+Mod2+89 workspace $ws3
+bindcode $mod+Mod2+83 workspace $ws4
+bindcode $mod+Mod2+84 workspace $ws5
+bindcode $mod+Mod2+85 workspace $ws6
+bindcode $mod+Mod2+79 workspace $ws7
+bindcode $mod+Mod2+80 workspace $ws8
+bindcode $mod+Mod2+81 workspace $ws9
+bindcode $mod+Mod2+90 workspace $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+# move focused container to workspace with numpad keys
+bindcode $mod+Shift+Mod2+87     move container to workspace  $ws1
+bindcode $mod+Shift+Mod2+88     move container to workspace  $ws2
+bindcode $mod+Shift+Mod2+89     move container to workspace  $ws3
+bindcode $mod+Shift+Mod2+83     move container to workspace  $ws4
+bindcode $mod+Shift+Mod2+84     move container to workspace  $ws5
+bindcode $mod+Shift+Mod2+85     move container to workspace  $ws6
+bindcode $mod+Shift+Mod2+79     move container to workspace  $ws7
+bindcode $mod+Shift+Mod2+80     move container to workspace  $ws8
+bindcode $mod+Shift+Mod2+81     move container to workspace  $ws9
+bindcode $mod+Shift+Mod2+90     move container to workspace  $ws10
+
+# move focused container to workspace with numpad keys
+bindcode $mod+Shift+87   move container to workspace  $ws1
+bindcode $mod+Shift+88   move container to workspace  $ws2
+bindcode $mod+Shift+89   move container to workspace  $ws3
+bindcode $mod+Shift+83   move container to workspace  $ws4
+bindcode $mod+Shift+84   move container to workspace  $ws5
+bindcode $mod+Shift+85   move container to workspace  $ws6
+bindcode $mod+Shift+79   move container to workspace  $ws7
+bindcode $mod+Shift+80   move container to workspace  $ws8
+bindcode $mod+Shift+81   move container to workspace  $ws9
+bindcode $mod+Shift+90   move container to workspace  $ws10
+
+# Forcing apps on workspaces
+# assign [class="Alacritty"] $ws1
+assign [class="Firefox"] $ws2
+    for_window [workspace=$ws2] layout stacked
+assign [class="Brave"] $ws2
+assign [class="Thunar"] $ws3
+assign [class="mpv"] $ws4
+assign [class="TelegramDesktop"] $ws5
+# assign [class="spotify"] $ws10
+for_window [class="spotify"] move to workspace $ws10
+for_window [class="libreoffice"] move to workspace $ws6
+for_window [class="VirtualBox Machine"] move to workspace $ws9
+
+for_window [title="Picture-in-Picture"] sticky enable
+
+# Set default floating mode
+for_window [class="Lxappearance"] floating enable 
+for_window [class="Pavucontrol"] floating enable
+for_window [class="arandr"] floating enable
+for_window [class="SimpleScreenRecorder"] floating enable
+for_window [class="Gnome-calculator"] floating enable
+for_window [class="Xsane" instance="xsane"] floating enable
+for_window [class="qt5ct" instance="qt5ct"] floating enable
+for_window [class="Blueberry.py" instance="blueberry.py"] floating enable
+for_window [class="Bluetooth-sendto" instance="bluetooth-sendto"] floating enable
+for_window [class="Pamac-manager"] floating enable
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+    bindsym h resize shrink width 4 px or 4 ppt
+    bindsym j resize grow height 4 px or 4 ppt
+    bindsym k resize shrink height 4 px or 4 ppt
+    bindsym l resize grow width 4 px or 4 ppt
+
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    # exit resize mode: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Start i3bar to display a workspace bar (plus the system information i3status finds out, if available)
+bar {
+    # status_command i3status -c ~/.config/i3/i3status.conf
+    status_command py3status -c ~/.config/py3status/config -l ~/.cache/py3status.log
+    position top
+    separator_symbol " "
+    # tray_output primary
+
+   # Bar colors
+    colors {
+        background         $bg-color
+        separator          #757575
+        #                  border             background         text
+        focused_workspace  $bg-color          $bg-color          $text-color
+        inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
+        urgent_workspace   $blue-color        $blue-color        $text-color
+    }
+}
+
+
+# Window colors
+# client.focused          $bg-color           $bg-color          $text-color          #00ff00
+# Orange border for focused windows
+# client.focused          #d79921            #d79921            #d79921              #fabd2f
+client.focused          #458588            #458588            #458588              #83a598
+client.unfocused        $inactive-bg-color $inactive-bg-color $inactive-text-color 
+client.focused_inactive $inactive-bg-color $inactive-bg-color $inactive-text-color
+
+# Keybindings
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec --no-startup-id dpc -e
+bindsym $mod+Shift+x exec --no-startup-id dpc -p
+bindsym $mod+Shift+z exec --no-startup-id dpc -r
+bindsym $mod+i exec --no-startup-id PATH="$HOME/.fzf/bin:$PATH" alacritty -e sh -i -c em
+
+# Screen brightness controls
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 5
+
+# Media volume controls
+bindsym XF86AudioMute exec --no-startup-id amixer sset 'Master' toggle
+bindsym XF86AudioLowerVolume exec --no-startup-id amixer sset 'Master' 5%-
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset 'Master' 5%+
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+
+# Screenshot
+bindsym --release Print exec --no-startup-id scsh
+bindsym --release Control+Print exec --no-startup-id scsh -c
+bindsym --release Control+$mod+Print exec --no-startup-id scsh -a
+
+# Fn keybindings
+bindsym $mod+F1 exec --no-startup-id dbrowse
+bindsym $mod+F2 exec --no-startup-id dpl
+bindsym $mod+F3 exec --no-startup-id displayselect
+bindsym $mod+F4 exec --no-startup-id updatedisplay
+bindsym $mod+F10 exec --no-startup-id pavucontrol
+
+# Startup apps
+exec_always --no-startup-id setxkbmap -layout es
+#exec --no-startup-id dbus-launch picom -bCG --config ~/.config/picom/config &
+exec_always --no-startup-id unclutter --timeout 5 &
+#exec --no-startup-id ~/.dropbox-dist/dropboxd &
+exec_always --no-startup-id nm-applet
+exec --no-startup-id updatedisplay -q
+# exec_always --no-startup-id ~/.fehbg
+exec --no-startup-id /usr/libexec/geoclue-2.0/demos/agent &
+exec --no-startup-id redshift-gtk
+#get auth work with polkit-gnome
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+# start blueberry app for managing bluetooth devices from tray:
+exec --no-startup-id blueberry-tray

@@ -1,0 +1,9 @@
+[submodule "mpv/.config/mpv/scripts/mpv_sponsorblock_minimal"]
+	path = mpv/.config/mpv/scripts/mpv_sponsorblock_minimal
+	url = https://codeberg.org/jouni/mpv_sponsorblock_minimal.git
+[submodule "rofi/.config/rofi/themes/gruvbox"]
+	path = rofi/.config/rofi/themes/gruvbox
+	url = https://github.com/bardisty/gruvbox-rofi
+[submodule "mpv/.config/mpv/scripts/mpv-youtube-quality"]
+	path = mpv/.config/mpv/scripts/mpv-youtube-quality
+	url = https://github.com/christoph-heinrich/mpv-youtube-quality.git

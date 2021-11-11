@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Single instance of mpv
+# Based on https://dglava.github.io/en/mpv-jedan.html
+
+pkill -x mpv >/dev/null 2>&1
+
+if [ -z "$1" ]; then
+    mpv --player-operation-mode=pseudo-gui
+else
+    mpv --player-operation-mode=pseudo-gui "$1" 
+fi

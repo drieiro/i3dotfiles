@@ -1,0 +1,56 @@
+# vim: syntax=sh
+
+### Functions ###
+
+# From https://gist.github.com/rajeshg/712300
+mkcd() {
+  last=$(eval "echo \$$#")
+  if [ ! -n "$last" ]; then
+    echo "Enter a directory name"
+  elif [ -d $last ]; then
+    echo "\`$last' already exists"
+  else
+    mkdir $@ && cd $last
+  fi
+}
+
+# From https://unix.stackexchange.com/questions/79135/is-there-a-condensed-side-by-side-diff-format
+dif() {
+    diff -yr -W250 $1 $2 | expand | \
+    grep -E -C3 '^.{123} [|<>]( |$)' | colordiff | less -rS
+}
+
+
+# fzf functions
+
+# fkill - kill processes - list only the ones you can kill. Modified the earlier script.
+fkill() {
+    local pid 
+    if [ "$UID" != "0" ]; then
+        pid=$(ps -f -u $UID | sed 1d | fzf -e -m | awk '{print $2}')
+    else
+        pid=$(ps -ef | sed 1d | fzf -e -m | awk '{print $2}')
+    fi  
+
+    if [ "x$pid" != "x" ]
+    then
+        echo $pid | xargs kill -${1:-9}
+    fi  
+}
+
+fd() {
+  local dir
+    dir=$(find -L ${1:-.} -path '*/\.*' -prune \
+                      -o -type d -print 2> /dev/null | fzf -e +m) &&
+                        cd "$dir"
+}
+
+sc() {
+    find -L ${SC:-$HOME/.local/scripts} $HOME/.config/i3/scripts -type f -not -path '*/\.git/*' 2>/dev/null | fzf -e --height=30% --layout=reverse --prompt="Scripts: " --preview="cat {1}" | xargs -r ${EDITOR:-nvim}
+}
+
+# https://askubuntu.com/a/197532
+
+caracteres () {
+    echo ${#1}
+}

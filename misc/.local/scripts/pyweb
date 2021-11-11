@@ -1,0 +1,26 @@
+#!/bin/sh
+
+d=/media/drieiro/DATOS/DATA/httpshare
+
+startserver() {
+    cd $d || exit
+    nohup python3 -m http.server 8080 >/tmp/nohup.out 2>&1 &
+    echo "http://$(hostname -i):8080"
+}
+
+killserver() {
+    spid=$(ps auxf | grep http.server | grep -v grep | awk '{print $2}')
+    [ -z "$spid" ] || kill -9 "$spid"
+}
+
+helpmsg() {
+    echo "$0 [ start | stop ]"
+}
+
+[ "$#" -ne "1" ] && helpmsg && exit 1
+
+case "$1" in
+    start) killserver && startserver ;;
+    stop) killserver ;;
+    *) helpmsg ;;
+esac

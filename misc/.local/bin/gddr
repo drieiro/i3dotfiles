@@ -1,0 +1,16 @@
+#!/bin/sh
+
+[ "$#" -ne "1" ] && echo "$0 [ montar | desmontar ]" && exit 1
+
+dir="/media/drieiro/DATOS/DATA/Google Drive/gddr"
+
+case $1 in
+    montar)
+        if ping -c1 google.com >/dev/null 2>&1; then
+            rclone mount --drive-export-formats ods,odt,odp gddr: "$dir" &
+        else
+            echo "Sin conexión a internet." && exit 1
+        fi ;;
+    desmontar) fusermount -u "$dir" >/dev/null 2>&1 ;;
+    *) echo "$0 [ montar | desmontar ]" ;;
+esac

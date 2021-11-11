@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+#
+# ff - search files with fzf and open them
+#
+
+# Check if fzf is installed
+if ! type fzf &> /dev/null; then
+    echo "fzf is not installed."
+    exit 1
+fi
+
+# Check parameters
+if [[ $# -eq 0 ]]; then
+    DIRPATH="."
+else
+    DIRPATH=($@)
+fi
+
+# Default text editor
+[[ -z $EDITOR ]] && EDITOR=nvim
+
+# Default FZF options
+export FZF_DEFAULT_OPTS='
+--height=50%
+--layout=reverse
+--prompt="Buscar: "'
+
+# Run program with chosen file
+main() {
+
+    file=$(find -L "${DIRPATH[@]}" -type f 2>/dev/null | grep -v ".git" | fzf -e --query="$file") &&
+
+    if [[ -n $file ]]; then
+        if file --mime-type "$file" | grep -q 'text/'; then
+            if [[ ! -w "$file" ]]; then
+                read -r -p "You do not have write permission on this file. Edit as root? [y/n] " ROOT
+                [[ $ROOT = 'y' ]] && sudo -e "$file" && main "$file"
+            else
+                if [[ $TERM_PROGRAM == 'vscode' ]]; then
+                    ps -e | grep -q codium && setsid codium -r "$file"
+                    ps -e | grep -q code && setsid code -r "$file"
+                    main "$file"
+                else
+                    setsid $EDITOR "$file"
+                    main "$file"
+                fi
+            fi
+        else
+            setsid xdg-open "$file" &>/dev/null
+            main "$file"
+        fi
+    fi
+}
+
+main ""

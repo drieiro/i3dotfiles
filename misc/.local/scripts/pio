@@ -1,0 +1,2 @@
+#!/bin/sh
+ffmpeg -i $1 -s 640x360 -qscale 2  -vtag DX50 $2

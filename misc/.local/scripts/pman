@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+#
+# pman - Open man pages on your PDF viewer
+#
+
+export FZF_DEFAULT_OPTS='
+--height=30%
+--layout=reverse
+--prompt="Manual: "'
+
+tmpfile=$(mktemp)
+
+man -k . | fzf -e --prompt='Man> ' | awk '{print $1}' | xargs -r man -T pdf > "$tmpfile" 
+[ -s $tmpfile ] && xdg-open $tmpfile

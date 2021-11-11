@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+function echo_message() {
+    local color=$1;
+    local message=$2;
+    local option=$3;
+    if ! [[ $color =~ ^[0-9]$ ]] ; then
+        case $(echo -e "$color" | tr '[:upper:]' '[:lower:]') in
+            # red
+            error) color=1 ;;
+            # green
+            success) color=2 ;;
+            # yellow
+            info) color=5 ;;
+            # cyan
+            question) color=6 ;;
+            # orange
+            warning) color=202 ;;
+            # white
+            *) color=7 ;;
+        esac
+    fi
+    tput setaf $color;
+    
+    if [ "$option" = '-n' ]; then
+        # Read messages colors
+        tput bold;
+        echo -e -n "$message";
+    else
+        echo -e "$message";
+    fi
+    tput sgr0;
+}

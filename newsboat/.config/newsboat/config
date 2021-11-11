@@ -1,0 +1,22 @@
+# Colors
+include                 "~/.config/newsboat/colors
+
+# bind keys
+bind-key h              quit
+bind-key j              down
+bind-key k              up
+bind-key l              open
+bind-key H              prev-feed
+bind-key L              next-feed
+bind-key c              toggle-show-read-feeds
+unbind-key              g
+bind-key g              home
+unbind-key              G
+bind-key G              end
+bind-key n              next-unread
+bind-key N              prev-unread
+
+
+# Macros
+macro v set browser "mpv %u" ; open-in-browser ; set browser "brave-browser %u"
+macro s set browser "dpl -a %u" ; open-in-browser ; set browser "brave-browser %u"

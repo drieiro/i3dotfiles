@@ -1,0 +1,52 @@
+#!/bin/sh
+
+### Aliases ###
+
+# Terminal stuff
+alias \
+    sudo='sudo ' \
+    mkdir='mkdir -p' \
+    ..='cd ..' \
+    cd..='cd ..' \
+    d='cd ..' \
+    ls="ls -hN --color=auto --group-directories-first" \
+    l='ls -l' \
+    lt='ls -hsSF -1' \
+    mnt="mount | awk -F' ' '{ printf \"%s\t%s\n\",\$1,\$3; }' | column -t | egrep ^/dev/ | sort" \
+    hg=' history | grep' \
+    pg='ps -e | grep' \
+    tf='tail -f' \
+    df='df -h' \
+    du='du -h' \
+    free='free -h' \
+    dut='du -sh' \
+    pubip="curl canhazip.com" \
+    ip='ip --color' \
+    ipb='ip --color --brief' \
+    cp='cp -v' \
+    apt='sudo apt'
+
+[ -x "$(command -v trash)" ] && alias \
+    rm='trash' \
+    te='trash-empty'
+
+# Navigation aliases
+alias \
+    exer='cd ~/proxectos/exercism' \
+    cdata='cd /media/drieiro/DATOS/DATA'
+
+# Programs
+[ -x "$(command -v nvim)" ] && alias \
+    vim="nvim" \
+    v="nvim" \
+    vimdiff="nvim -d"
+
+alias \
+    dsync='rsync -trluhv --delete --stats --inplace' \
+    mp3="youtube-dl -x -o '%(title)s.%(ext)s' --add-metadata --audio-format mp3 --audio-quality 320K" \
+    yt='yt-dlp' \
+    f='fff' \
+    nb='newsboat' \
+    geoip='geoiplookup' \
+    ffmpeg="ffmpeg -hide_banner"
+    ffprobe="ffprobe -hide_banner"

@@ -1,0 +1,47 @@
+#!/bin/sh
+
+#
+# music - i3blocks blocklet for music
+#
+
+player_status="$(playerctl status 2>&1)"
+[ "$player_status" = "No players found" ] && exit 0
+
+case $BLOCK_BUTTON in
+    1) playerctl play-pause ;;
+    3) notify-send -i "audio-player" "Módulo de música" "\n- Haz clic para reproducir o pausar
+Artista - Nombre de la pista
+阮 : Reproduciendo desde Spotify
+嗢 : Reproduciendo desde VLC
+ : Reproduciendo desde Firefox
+ : Reproduciendo desde otro programa
+ : Pausado
+" ;;
+    4) playerctl next ;;
+    5) playerctl previous ;;
+esac
+
+player="$(playerctl -l)"
+artist="$(playerctl metadata artist 2>/dev/null)"
+trackname="$(playerctl metadata title)"
+status="$(playerctl status)"
+resolution="$(xrandr |awk '$0 ~ "*" {print $1}')"
+
+case "$player" in
+    spotify) icon="阮" ;;
+    vlc) icon="嗢" ;;
+    tdesktop) icon="切" ;;
+    firefox*) icon="" ;;
+    *) icon="" ;;
+esac
+
+case "$resolution" in
+    2560x1080) chars="100" ;;
+    1920x1080) chars="80" ;;
+    1280x1024|1280x720|1366x768|*) chars="40" ;;
+esac
+
+[ "$status" = "Paused" ] && icon=""
+
+[ -z "$artist" ] && echo "$icon $trackname" | cut -c 1-$chars && exit 0
+echo "$icon $artist - $trackname" | cut -c 1-$chars && exit 0

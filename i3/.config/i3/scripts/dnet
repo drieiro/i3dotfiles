@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Based on https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/statusbar/sb-internet
+
+case $BLOCK_BUTTON in
+	1) alacritty -e nmtui ;;
+	3) notify-send -i "network_local" "Módulo de Internet" "\n- Haz clic para conectar
+睊 : Wi-Fi desconectado
+直 : Conexión Wi-Fi y calidad
+ : Ethernet desconectado
+ : Conexión Ethernet
+禍 : Conexión USB
+嬨 : VPN está activa
+" ;;
+	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
+	down) wifiicon="睊 " ;;
+	up) wifiicon="$(awk '/^\s*w/ { print "直", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
+	unknown) wifiicon=" " ;;
+esac
+
+# Show icon if using USB tethering
+[ -d /sys/class/net/usb*/ ] && wifiicon="禍 "
+
+printf "%s%s%s\n" "$wifiicon" "$(sed "s/down//;s/up/ /" /sys/class/net/e*/operstate 2>/dev/null)" "$(sed "s/.*/嬨/" /sys/class/net/tun*/operstate 2>/dev/null)"

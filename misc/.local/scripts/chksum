@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+#
+# chksum - interactively compute and compare md5, sha1, sha224, sha256, sha384 and sha512 messages digests.
+#
+
+function echo_message() {
+    local color=$1;
+    local message=$2;
+    local option=$3;
+    if ! [[ $color =~ ^[0-9]$ ]] ; then
+        case $(echo -e "$color" | tr '[:upper:]' '[:lower:]') in
+            # red
+            error) color=1 ;;
+            # green
+            success) color=2 ;;
+            # yellow
+            info) color=5 ;;
+            # cyan
+            question) color=6 ;;
+            # orange
+            warning) color=202 ;;
+            # white
+            *) color=7 ;;
+        esac
+    fi
+    tput setaf $color;
+    
+    if [ "$option" = '-n' ]; then
+        # Read messages colors
+        tput bold;
+        echo -e -n "$message";
+    else
+        echo -e "$message";
+    fi
+    tput sgr0;
+}
+
+if [ $# -ne 0 ]; then echo_message warning "Este script no necesita parámetros." && exit 1; fi
+
+echo_message question "Introduce la ruta de la imagen ISO: " -n
+read -re ISO
+if [ ! -e "$ISO" ]; then echo_message warning "La imagen ISO no existe o la ruta es incorrecta." && exit 2; fi
+
+echo_message question "Introduce el algoritmo deseado (md5, sha1, sha224, sha256, sha384, sha512): " -n
+read -r algoritmo
+
+echo_message question "Introduce un hash de referencia (opcional): " -n
+read -r refhash
+
+function calculate {
+    # $1 = program (i.e. md5sum)
+    if ! command -v "$1" &>/dev/null; then
+        echo_message warning "No se ha podido localizar el programa $1. Compruebe que esté instalado y vuelva a intentarlo."
+        exit 4
+    fi
+
+    echo_message info "\nCalculando...\n"
+    calc=$($1 "$ISO")
+    digest="${calc%% *}"
+
+    [ -n "$digest" ] && \
+    if [ -n "$refhash" ]; then
+        if [ "$digest" = "$refhash" ]; then
+            echo_message success "Las sumas hash coinciden."
+            echo_message info "Hash calculado: $digest"
+        else
+            echo_message error "Las sumas hash no coinciden."
+            echo_message info "Hash calculado: $digest"
+        fi
+    else
+        echo_message info "Hash calculado: $digest"
+    fi
+}
+
+case $algoritmo in
+    md5) calculate md5sum ;;
+    sha1) calculate sha1sum ;;
+    sha224) calculate sha224sum ;;
+    sha256) calculate sha256sum ;;
+    sha384) calculate sha384sum ;;
+    sha512) calculate sha512sum ;;
+    *) echo_message warning "El algoritmo introducido es erróneo." && exit 3 ;;
+esac

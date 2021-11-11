@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+#
+# --- hbl ---
+# hostsblock - Unified hosts file with base extensions
+# https://github.com/StevenBlack/hosts
+#
+# DEPENDENCIES
+#   - bash
+#   - curl
+#   - jq
+#
+# ------------------
+
+
+# Variables
+version="2021.05.18.1"
+contents="https://api.github.com/repos/stevenblack/hosts/contents"
+configdir="/etc/hostsblock"
+    [ -d $configdir ] || mkdir $configdir
+log="$configdir/log"
+    [ -e $log ] || touch $log
+
+
+# First checks
+if ! ping -c1 api.github.com &>/dev/null; then
+    echo "No ha sido posible acceder a la api de GitHub. Compruebe si existe una conexión a internet."
+    exit 2
+fi
+
+if ! command -v jq &>/dev/null; then
+    echo "Se necesita 'jq' para el funcionamiento de este script."
+    echo "https://stedolan.github.io/jq/download/"
+    exit 3
+fi
+
+
+# Functions
+function usage { 
+    cat << "EOF"
+Uso:
+    hbl [ opción ]
+
+Opciones:
+    -u (--update): Actualiza el fichero hosts.
+    -r (--recover): Restaura el fichero hosts al estado inicial.
+    -l (--log): Muestra información sobre la última actualización.
+    -h (--help): Muestra esta ayuda.
+    -v (--version): Muestra la versión actual del script.
+
+Dependencias:
+    bash
+    curl
+    jq
+EOF
+}
+
+function root {
+    if [ $UID -ne '0' ]; then
+        echo "Se necesitan permisos de root."
+        exit 1
+    fi
+}
+
+function get_sha {
+    curl -s $contents \
+        | jq '.[] | select(.name == "hosts")' \
+        | grep 'sha' \
+        | awk '{print $2}' \
+        | tr -d \",
+}
+
+function get_localsha {
+    [ -e $configdir/sha ] && cat $configdir/sha
+}
+
+function get_file {
+    [ -e /etc/hosts.bak ] || cp /etc/hosts /etc/hosts.bak
+    cp /etc/hosts.bak /etc/hosts
+    wget -O /tmp/hostsblock https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts &>/dev/null
+    echo -e "\n\n################################################################\n\n" >> /etc/hosts
+    cat /tmp/hostsblock >> /etc/hosts
+    get_sha > $configdir/sha
+    echo "El fichero hosts ha sido actualizado."
+}
+
+function update {
+    if [ ! -e $configdir/sha ]; then
+        echo "Parece que es la primera que se ejecuta este script, o el fichero "$configdir/sha" ha sido eliminado. Actualizando fichero hosts..."
+        get_file && echo $(date +%F) > $log
+    elif [ $(get_sha) != $(get_localsha) ]; then
+        get_file && \
+            [ -e $log ] && echo "Última actualización: $(tail -1 $log)"
+        echo $(date +%F) >> $log
+    else
+        echo "Nada que actualizar."
+    fi
+}
+
+function recover {
+    echo "Restaurando..."
+    if [ -e /etc/hosts.bak ]; then
+        cp /etc/hosts.bak /etc/hosts && \
+            echo "Fichero /etc/hosts restaurado."
+        rm /etc/hosts.bak && \
+            echo "Fichero /etc/hosts.bak eliminado."
+    else
+        echo "No se ha podido restaurar el fichero "/etc/hosts". Puede deberse a que nunca se ha ejecutado este script o se ha eliminado el fichero "/etc/hosts.bak". Omitiendo..."
+    fi
+    if [ -d /etc/hostsblock ]; then
+        rm -rf /etc/hostsblock && \
+        echo "Carpeta de configuración "$configdir" eliminada." 
+    else
+        echo "No se ha podido eliminar la carpeta "$configdir". Puede deberse a que nunca se ha ejecutado este script o se ha eliminado dicha carpeta. Omitiendo..."
+        exit 4
+    fi
+}
+
+function check_log {
+    if [ -e $log ]; then
+        if [ $(cat $log | wc -l) -ge '10' ]; then
+            lastlog=$(tail -1 $log)
+            echo $lastlog > $log
+        fi
+    fi
+}
+
+function show_log {
+    if [ -e $log ]; then
+        echo "Última actualización: $(tail -1 $log)"
+    else
+        echo "No se ha encontrado el fichero de log."
+        exit 5
+    fi
+}
+
+
+# Parameters
+case $1 in
+    -u|--update) root && check_log && update ;;
+    -r|--recover) root && recover ;;
+    -l|--log) show_log ;;
+    -h|--help) usage ;;
+    -v|--version) echo "hbl v$version" ;;
+    *) usage ;;
+esac

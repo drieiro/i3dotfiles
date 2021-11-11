@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Get all connected screens.
+screens=$(xrandr -q | grep " connected" | awk '{print $1}')
+
+# Simply execute xrandr according to my needs
+if $(echo $screens | grep -q "HDMI"); then
+    # xrandr --output HDMI1 --mode 1280x720 --pos 40x0 --rotate normal --output DP1 --off --output eDP1 --primary --mode 1366x768 --pos 0x720 --rotate normal --output VGA1 --off \
+    # xrandr --output HDMI1 --primary --mode 2560x1080 --pos 0x0 --rotate normal --output DP1 --off --output eDP1 --off --output VGA1 --off \
+    xrandr --output HDMI1 --primary --auto --pos 0x0 --rotate normal --output DP1 --off --output eDP1 --off --output VGA1 --off \
+        && [ "$1" != "-q" ] && notify-send -i 'display' 'Monitor HDMI configurado'
+else
+    xrandr --output HDMI1 --off --output DP1 --off --output eDP1 --primary --mode 1366x768 --pos 0x0 --rotate normal --output VGA1 --off \
+        && [ "$1" != "-q" ] && notify-send -i 'display' 'Monitor eDP1 configurado'
+fi
+
+# Set wallpaper
+if [ -f ~/.fehbg ]; then
+    sh ~/.fehbg
+else
+    # Own wallpaper configuration script
+   wlp 
+fi

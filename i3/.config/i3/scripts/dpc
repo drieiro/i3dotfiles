@@ -1,0 +1,8 @@
+#!/bin/sh
+
+case "$1" in
+    -p) [ $(echo -e "No\nSí" | dmenu -i -nb "#cc241d" -sb "#fb4934" -sf "#fbf1c7" -nf "#d5c4a1" -p "¿Apagar el equipo?") = "Sí" ] && /usr/sbin/shutdown -h now ;;
+    -r) [ $(echo -e "No\nSí" | dmenu -i -nb "#cc241d" -sb "#fb4934" -sf "#fbf1c7" -nf "#d5c4a1" -p "¿Reiniciar el equipo?") = "Sí" ] && /usr/sbin/shutdown -r now ;;
+    -e) [ $(echo -e "No\nSí" | dmenu -i -p "¿Cerrar sesión?") = "Sí" ] && i3-msg exit ;;
+    *) exit ;;
+esac

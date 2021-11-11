@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=gdrd
+Comment=Google Drive
+Exec=gdrd montar
+# Default icon on Papirus Icon Pack
+Icon=google-drive
+# Default icon on Flatery Icon Pack
+#Icon=folder-google-drive
+Terminal=false
+Actions=unmount;
+
+[Desktop Action unmount]
+Name=Desmontar
+Exec=gdrd desmontar

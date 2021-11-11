@@ -1,0 +1,16 @@
+#!/bin/sh
+
+dir="/run/media/drieiro/DATOS/DATA/Imágenes/Wallpapers/wall" # Set wallpapers directory
+
+pic=$(find $dir/* -type f | shuf -n 1)
+
+if echo "$DESKTOP_SESSION" | grep -qi "gnome"; then
+    PID=$(pgrep -o gnome-session)
+    DBUS_SESSION_BUS_ADDRESS="$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/"$PID"/environ|cut -d= -f2-)"
+    export DBUS_SESSION_BUS_ADDRESS
+    /usr/bin/gsettings set org.gnome.desktop.background picture-uri "file://$pic"
+else
+    type feh >/dev/null 2>&1 || (echo "feh no está instalado." && exit 1)
+    feh --bg-fill "$pic"
+    type notify-send >/dev/null 2>&1 && notify-send "Wallpaper actualizado"
+fi

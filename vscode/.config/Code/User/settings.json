@@ -1,0 +1,19 @@
+{
+    "telemetry.enableTelemetry": false,
+    "window.zoomLevel": -1,
+    "editor.fontFamily": "Roboto Mono",
+    "editor.fontSize": 15,
+    "terminal.integrated.fontFamily": "Roboto Mono",
+    "terminalCursor.foreground": "#00ffaa",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.fontSize": 13,
+    "editor.renderWhitespace": "all",
+    "workbench.colorTheme": "Gruvbox Dark (Medium)",
+    "workbench.iconTheme": "chalice-icon-theme",
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "terminal.integrated.env.linux": {
+        "$TERM_PROGRAM": "vscode"
+    },
+    "customizeUI.font.monospace": "Roboto Mono",
+    "customizeUI.font.regular": "Droid Sans"
+}

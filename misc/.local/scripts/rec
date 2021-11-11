@@ -1,0 +1,20 @@
+#!/bin/sh
+
+d="$(date +%Y%m%d)"
+t="$(date +%H%M%S)"
+s=$(xdg-user-dir VIDEOS)/recordings
+res=$(xrandr --current | grep ' connected ' | grep primary | cut -d ' ' -f 4 | cut -d '+' -f 1)
+
+[ -d $s ] || mkdir $s
+
+f="$s/$d-$t.mp4"
+
+# ffmpeg -video_size 1366x768 -framerate 25 -f x11grab -i :0.0 -f pulse -ac 2 -i 0 "$f"
+ffmpeg -y \
+    -f x11grab \
+    -framerate 30 \
+    -video_size $res \
+    -i :0.0 \
+    -f alsa -i default \
+    -c:v libx264 -r 30 -c:a mp3 "$f"
+    # -c:v libx264 -pix_fmt yuv420p -qp 0 -preset ultrafast "$f"
