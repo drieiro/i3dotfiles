@@ -134,7 +134,6 @@ let g:coc_global_extensions = [
     \ 'coc-sh',
     \ 'coc-snippets',
     \ 'coc-sql',
-    \ 'coc-tabnine',
     \ 'coc-vimlsp',
     \ 'coc-xml',
     \ ]
