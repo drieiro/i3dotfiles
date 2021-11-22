@@ -15,6 +15,7 @@ order += "i3block music"
 order += "i3block weather"
 order += "i3block internet"
 order += "battery 1"
+order += "arch_updates"
 order += "cpu_usage"
 order += "volume_status"
 order += "i3block backlight"
@@ -86,5 +87,10 @@ do_not_disturb {
 
 i3block backlight {
     command = "~/.config/i3/scripts/dbl"
-    interval = 10
+    interval = 1
+}
+
+arch_updates {
+    format = " {pacman}"
+    hide_if_zero = "true"
 }

@@ -111,7 +111,7 @@
 
     ### Text ###
 
-    font = Monospace 8
+    font = Roboto Mono Nerd Font 9
 
     # The spacing between lines.  If the height is smaller than the
     # font height, it will get raised to the font height.
@@ -196,8 +196,7 @@
     max_icon_size = 32
 
     # Paths to default icons.
-    icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/:/usr/share/icons/Adwaita/16x16/apps:/usr/share/icons/Papirus/16x16/apps:/usr/share/icons/Papirus/16x16/devices
-
+    icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/:/usr/share/icons/Adwaita/16x16/apps:/usr/share/icons/Papirus/16x16/apps:/usr/share/icons/Papirus/16x16/devices:/usr/share/icons/Gruvbox-Material-Dark/16x16/apps:/usr/share/icons/Gruvbox-Material-Dark/16x16/devices
 
     ### History ###
 
