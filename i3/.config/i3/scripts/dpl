@@ -18,17 +18,13 @@ logfile="/tmp/dplaylist_$(date "+%Y-%m-%d")"
 
 # Main functions
 checklist () {
-    if [ ! -s "$listfile" ]; then
-        echo '#!/bin/sh' > "$listfile"
-        echo 'vidlist="' >> "$listfile"
-        echo '"' >> "$listfile"
-    fi
+    [ ! -s "$listfile" ] && echo -e "#!/bin/sh\n\ndeclare -A vidlist" > "$listfile"
 }
 
 add () {
-    title=$(curl -s https://www.youtube.com/oembed\?format\=json\&url\=$1 | jq '.title' | tr -d \")
-    [ -z "$title" ] && echo "No se ha podido obtener el título del vídeo." && exit 3
-    sed -i "/^vidlist/a $title 	$1" "$listfile"
+    gettitle=$(curl -s https://www.youtube.com/oembed\?format\=json\&url\=$1 | jq '.title' | tr -d \")
+    [ -z "$gettitle" ] && echo "No se ha podido obtener el título del vídeo." && exit 3
+    sed -i "/^declare -A vidlist/a vidlist[$gettitle]=\"$1\"" "$listfile"
 }
 
 remove () {
@@ -54,9 +50,14 @@ EOF
 main () {
     checklist
     . "$listfile"
-    echo "$vidlist" | grep -P "^$(echo "$vidlist" | grep "https:" | sed 's/\t.*//g' | dmenu -i -p "Selecciona que ver:" -l 20 | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv --log-file="$logfile"
+    title=$(printf '%s\n' "${!vidlist[@]}" | dmenu -i -p "Selecciona que ver:" -l 20)
+    if [ "$title" ]; then
+        url=$(printf '%s\n' "${vidlist["${title}"]}")
+        mpv --log-file="$logfile" $url
+    else
+        exit 0;    
+    fi
 }
-
 
 case "$1" in
     -a|--add) add $2 ;;
