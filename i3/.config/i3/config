@@ -44,7 +44,7 @@ bindsym $mod+f exec --no-startup-id pcmanfm &
 bindsym $mod+n exec --no-startup-id firefox &
 
 # Start Telegram
-bindsym $mod+t exec --no-startup-id telegram &
+bindsym $mod+t exec --no-startup-id /opt/telegram/Telegram &
 
 # kill focused window
 bindsym $mod+q kill
@@ -278,6 +278,7 @@ bindsym $mod+Shift+e exec --no-startup-id dpc -e
 bindsym $mod+Shift+x exec --no-startup-id dpc -p
 bindsym $mod+Shift+z exec --no-startup-id dpc -r
 bindsym $mod+i exec --no-startup-id PATH="$HOME/.config/fzf/bin:$PATH" alacritty -e sh -i -c em
+bindsym $mod+Escape exec --no-startup-id blur-lock.sh
 
 # Screen brightness controls
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 5
@@ -310,12 +311,9 @@ exec_always --no-startup-id setxkbmap -layout es
 exec_always --no-startup-id unclutter --timeout 5 &
 exec --no-startup-id dropbox &
 exec --no-startup-id updatedisplay -q
-# exec_always --no-startup-id ~/.fehbg
 # https://github.com/jonls/redshift/issues/636#issuecomment-412157307
 exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent &
 exec --no-startup-id redshift-gtk
 #get auth work with polkit-gnome
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-# start blueberry app for managing bluetooth devices from tray:
-# exec --no-startup-id blueberry-tray
 exec_always --no-startup-id nm-applet

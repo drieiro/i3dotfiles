@@ -2,7 +2,7 @@
 
 [ "$#" -ne "1" ] && echo "$0 [ montar | desmontar ]" && exit 1
 
-dir="/media/drieiro/DATOS/DATA/Google Drive/gddr"
+dir="/run/media/drieiro/DATOS/DATA/Google Drive/gddr"
 
 case $1 in
     montar)
