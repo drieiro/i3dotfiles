@@ -3,5 +3,5 @@ configuration {
 	/* font: "RobotoMono Nerd Font Mono"; */
 	show-icons: true;
 	terminal: "alacritty";
-	theme: "gruvbox-dark";
 }
+@theme "gruvbox-dark"
