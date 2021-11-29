@@ -1,8 +1,11 @@
 #!/bin/sh
 
-case "$1" in
-    -p) [ $(echo -e "No\nSí" | dmenu -i -nb "#cc241d" -sb "#fb4934" -sf "#fbf1c7" -nf "#d5c4a1" -p "¿Apagar el equipo?") = "Sí" ] && /usr/sbin/shutdown -h now ;;
-    -r) [ $(echo -e "No\nSí" | dmenu -i -nb "#cc241d" -sb "#fb4934" -sf "#fbf1c7" -nf "#d5c4a1" -p "¿Reiniciar el equipo?") = "Sí" ] && /usr/sbin/shutdown -r now ;;
-    -e) [ $(echo -e "No\nSí" | dmenu -i -p "¿Cerrar sesión?") = "Sí" ] && i3-msg exit ;;
-    *) exit ;;
+option=$(echo -e "ﰸ Cancelar\n﫼 Salir\n Bloquear\nﰇ Reiniciar\n襤 Apagar" | dmenu -i -p "Selecciona una opción:")
+
+case "$option" in
+    "襤 Apagar") /usr/sbin/shutdown -h now ;;
+    "ﰇ Reiniciar") /usr/sbin/shutdown -r now ;;
+    " Bloquear") blur-lock.sh ;;
+    "﫼 Salir") i3-msg exit ;;
+    "ﰸ Cancelar"|*) exit ;;
 esac

@@ -19,7 +19,6 @@ alias \
     df='df -h' \
     du='du -h' \
     free='free -h' \
-    dut='du -sh' \
     pubip="curl canhazip.com" \
     ip='ip --color' \
     ipb='ip --color --brief' \
