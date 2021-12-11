@@ -2,6 +2,11 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
+
+################
+# BASIC CONFIG #
+################
+
 # Set mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
 
@@ -12,14 +17,6 @@ floating_modifier $mod
 
 # Font for window titles.
 font pango:RobotoMono Nerd Font 10
-
-# Colors
-set $bg-color            #1d2021
-set $inactive-bg-color   #1d2021
-set $text-color          #fbf1c7
-set $inactive-text-color #665c54
-set $urgent-bg-color     #83a598
-set $blue-color          #458588
 
 # i3-gaps
 gaps outer 10
@@ -33,56 +30,29 @@ new_window pixel 2
 default_orientation vertical # start in opposite orientation from your monitor
 for_window [class="^.*"] split toggle border pixel 2
 
-# change focus
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+##########
+# COLORS #
+##########
 
-# move focused window
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move down
-bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
+# Set default colors (Gruvbox)
+set $bg-color            #1d2021
+set $inactive-bg-color   #1d2021
+set $text-color          #fbf1c7
+set $inactive-text-color #665c54
+set $urgent-bg-color     #83a598
+set $blue-color          #458588
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+# Window colors
+client.focused          #458588            #458588            #458588              #83a598
+client.unfocused        $inactive-bg-color $inactive-bg-color $inactive-text-color 
+client.focused_inactive $inactive-bg-color $inactive-bg-color $inactive-text-color
 
-# split orientation
-bindsym $mod+z split h;exec --no-startup-id notify-send 'Modo horizontal'
-bindsym $mod+v split v;exec --no-startup-id notify-send 'Modo vertical'
 
-# enter fullscreen mode for the focused container
-bindsym $mod+Shift+f fullscreen toggle
 
-# change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
-
-# toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
-
-# change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
-
-# focus the parent container
-bindsym $mod+a focus parent
-
-# Sticky window
-bindsym $mod+Shift+s floating enable, sticky enable ; exec --no-startup-id ~/.config/i3/scripts/xpip
-
-# focus the child container
-#bindsym $mod+d focus child
+#####################
+# WORKSPACES CONFIG #
+#####################
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -178,7 +148,7 @@ assign [class="Pcmanfm"] $ws3
 assign [class="mpv"] $ws4
 assign [class="TelegramDesktop"] $ws5
 # assign [class="spotify"] $ws10
-for_window [class="spotify"] move to workspace $ws10
+for_window [class="Spotify"] move to workspace $ws10
 for_window [class="libreoffice"] move to workspace $ws6
 for_window [class="VirtualBox Machine"] move to workspace $ws9
 for_window [title="Picture-in-Picture"] sticky enable
@@ -195,26 +165,10 @@ for_window [class="Blueberry.py" instance="blueberry.py"] floating enable
 for_window [class="Bluetooth-sendto" instance="bluetooth-sendto"] floating enable
 for_window [class="Pamac-manager"] floating enable
 
-# resize window (you can also use the mouse for that)
-mode "resize" {
-    bindsym h resize shrink width 4 px or 4 ppt
-    bindsym j resize grow height 4 px or 4 ppt
-    bindsym k resize shrink height 4 px or 4 ppt
-    bindsym l resize grow width 4 px or 4 ppt
 
-    # same bindings, but for the arrow keys
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
-
-    # exit resize mode: Enter or Escape
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
-}
-
-bindsym $mod+r mode "resize"
+##############
+# BAR CONFIG #
+##############
 
 # Start i3bar to display a workspace bar (plus the system information i3status finds out, if available)
 bar {
@@ -236,12 +190,82 @@ bar {
 }
 
 
-# Window colors
-client.focused          #458588            #458588            #458588              #83a598
-client.unfocused        $inactive-bg-color $inactive-bg-color $inactive-text-color 
-client.focused_inactive $inactive-bg-color $inactive-bg-color $inactive-text-color
+###############
+# KEYBINDINGS #
+###############
+#
+# resize window (you can also use the mouse for that)
+mode "resize" {
+    bindsym h resize shrink width 4 px or 4 ppt
+    bindsym j resize grow height 4 px or 4 ppt
+    bindsym k resize shrink height 4 px or 4 ppt
+    bindsym l resize grow width 4 px or 4 ppt
 
-# Keybindings
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    # exit resize mode: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split orientation
+bindsym $mod+z split h;exec --no-startup-id notify-send 'Modo horizontal'
+bindsym $mod+v split v;exec --no-startup-id notify-send 'Modo vertical'
+
+# enter fullscreen mode for the focused container
+bindsym $mod+Shift+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# Sticky window
+bindsym $mod+Shift+s floating enable, sticky enable ; exec --no-startup-id ~/.config/i3/scripts/xpip
+
+# focus the child container
+#bindsym $mod+d focus child
+
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 bindsym $mod+q kill
@@ -251,16 +275,16 @@ bindsym $mod+Return exec --no-startup-id alacritty
 bindsym $mod+Shift+Return exec --no-startup-id alacritty --working-directory "$(readlink -e /proc/"$(pgrep -oP "$(xdo pid)")"/cwd)"
 bindsym $mod+f exec --no-startup-id pcmanfm &
 bindsym $mod+n exec --no-startup-id firefox &
+bindsym $mod+Shift+n exec --no-startup-id firefox --private-window &
 bindsym $mod+t exec --no-startup-id /opt/telegram/Telegram &
 bindsym $mod+d exec --no-startup-id dmenu_run -i
 bindsym $mod+o exec --no-startup-id rofi -i -show drun
 bindsym $mod+Shift+p exec --no-startup-id wlp
+bindsym $mod+Insert exec --no-startup-id empty_workspace.sh
 
-# Screen brightness controls
+# XF86 Keys
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 5
-
-# Media volume controls
 bindsym XF86AudioMute exec --no-startup-id amixer sset 'Master' toggle
 bindsym XF86AudioLowerVolume exec --no-startup-id amixer sset 'Master' 5%-
 bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset 'Master' 5%+
@@ -268,6 +292,8 @@ bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
 bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+bindsym XF86Calculator exec --no-startup-id qalculate-gtk
+bindsym XF86Tools exec --no-startup-id spotify
 
 # Screenshot
 bindsym --release Print exec --no-startup-id scsh
@@ -275,13 +301,17 @@ bindsym --release Control+Print exec --no-startup-id scsh -c
 bindsym --release Control+$mod+Print exec --no-startup-id scsh -a
 
 # Fn keybindings
-bindsym $mod+F1 exec --no-startup-id dbrowse
+bindsym $mod+F1 exec --no-startup-id explore-with-dmenu.sh
 bindsym $mod+F2 exec --no-startup-id dpl
 bindsym $mod+F3 exec --no-startup-id displayselect
 bindsym $mod+F4 exec --no-startup-id updatedisplay
 bindsym $mod+F10 exec --no-startup-id pavucontrol
 
-# Startup apps
+
+################
+# STARTUP APPS #
+################
+
 exec_always --no-startup-id setxkbmap -layout es
 #exec --no-startup-id dbus-launch picom -bCG --config ~/.config/picom/config &
 exec_always --no-startup-id unclutter --timeout 5 &
@@ -290,6 +320,6 @@ exec --no-startup-id updatedisplay -q
 # https://github.com/jonls/redshift/issues/636#issuecomment-412157307
 exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent &
 exec --no-startup-id redshift-gtk
-#get auth work with polkit-gnome
+# Get auth work with polkit-gnome
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec_always --no-startup-id nm-applet
