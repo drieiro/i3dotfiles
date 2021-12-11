@@ -39,6 +39,7 @@ fi
 
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
 export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_IM_MODULE=xim
 export BATS_RUN_SKIPPED="true"
 alias spotify="spotify --no-zygote"
 # pfetch variables

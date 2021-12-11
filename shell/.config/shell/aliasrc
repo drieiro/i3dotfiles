@@ -23,7 +23,7 @@ alias \
     ip='ip --color' \
     ipb='ip --color --brief' \
     cp='cp -v' \
-    apt='sudo apt'
+    rgrep='grep -r'
 
 [ -x "$(command -v trash)" ] && alias \
     rm='trash' \
@@ -47,5 +47,5 @@ alias \
     f='fff' \
     nb='newsboat' \
     geoip='geoiplookup' \
-    ffmpeg="ffmpeg -hide_banner"
+    ffmpeg="ffmpeg -hide_banner" \
     ffprobe="ffprobe -hide_banner"

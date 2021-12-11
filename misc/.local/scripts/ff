@@ -22,9 +22,10 @@ fi
 
 # Default FZF options
 export FZF_DEFAULT_OPTS='
---height=50%
+--height=30%
 --layout=reverse
---prompt="Buscar: "'
+--prompt="Buscar: "
+--preview="cat {1}"'
 
 # Run program with chosen file
 main() {
@@ -32,7 +33,7 @@ main() {
     file=$(find -L "${DIRPATH[@]}" -type f 2>/dev/null | grep -v ".git" | fzf -e --query="$file") &&
 
     if [[ -n $file ]]; then
-        if file --mime-type "$file" | grep -q 'text/'; then
+        if file -L --mime-type "$file" | grep -q 'text/'; then
             if [[ ! -w "$file" ]]; then
                 read -r -p "You do not have write permission on this file. Edit as root? [y/n] " ROOT
                 [[ $ROOT = 'y' ]] && sudo -e "$file" && main "$file"
@@ -42,7 +43,7 @@ main() {
                     ps -e | grep -q code && setsid code -r "$file"
                     main "$file"
                 else
-                    setsid $EDITOR "$file"
+                    $EDITOR "$file"
                     main "$file"
                 fi
             fi
