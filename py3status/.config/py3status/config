@@ -56,7 +56,7 @@ cpu_usage {
 }
 
 volume_status {
-    command = "pactl"
+    command = "amixer"
     format = " {percentage}%"
     format_muted = "婢 muted"
     cache_timeout=0.5
