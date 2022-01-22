@@ -61,6 +61,10 @@ export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
 export PYLINTHOME="${XDG_DATA_HOME:-$HOME/.local/share}/pylint"
 export ICEAUTHORITY=${XDG_CACHE_HOME:-$HOME/.cache}/ICEauthority
 export WGETRC="${XDG_CONFIG_HOME:-$HOME/.config}/wget/wgetrc"
+export USERXSESSION="$XDG_CACHE_HOME/X11/xsession"
+export USERXSESSIONRC="$XDG_CACHE_HOME/X11/xsessionrc"
+export ALTUSERXSESSION="$XDG_CACHE_HOME/X11/Xsession"
+export ERRFILE="$XDG_CACHE_HOME/X11/xsession-errors"
 
 # ytfzf
 export YTFZF_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/ytfzf"

@@ -149,6 +149,7 @@ assign [class="mpv"] $ws4
 assign [class="TelegramDesktop"] $ws5
 # assign [class="spotify"] $ws10
 for_window [class="Spotify"] move to workspace $ws10
+for_window [class="Rhythmbox"] move to workspace $ws10
 for_window [class="libreoffice"] move to workspace $ws6
 for_window [class="VirtualBox Machine"] move to workspace $ws9
 for_window [title="Picture-in-Picture"] sticky enable

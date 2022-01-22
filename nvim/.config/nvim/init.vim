@@ -107,10 +107,8 @@ call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"
     Plug 'vitalk/vim-simple-todo'
         let g:simple_todo_tick_symbol = '✓'
 
-    Plug 'dylanaraps/fff.vim'
-        nnoremap <silent> <Leader>t :F<CR>
-        let g:fff#split = "30vnew"
-        let g:fff#split_direction = "nosplitbelow nosplitright"
+    Plug 'akinsho/toggleterm.nvim'
+        nnoremap <silent> <Leader>t :ToggleTerm<CR>
 
 call plug#end()
 

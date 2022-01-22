@@ -31,8 +31,7 @@ alias \
 
 # Navigation aliases
 alias \
-    exer='cd ~/proxectos/exercism' \
-    cdata='cd /run/media/drieiro/DATOS/DATA'
+    exer='cd ~/proxectos/exercism'
 
 # Programs
 [ -x "$(command -v nvim)" ] && alias \

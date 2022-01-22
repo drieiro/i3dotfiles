@@ -2,7 +2,9 @@
 
 [ "$#" -ne "1" ] && echo "$0 [ montar | desmontar ]" && exit 1
 
-dir="/run/media/drieiro/DATOS/DATA/Google Drive/gddr"
+dir="/tmp/gddr"
+
+[ ! -d "$dir" ] && mkdir -p "$dir"
 
 case $1 in
     montar)

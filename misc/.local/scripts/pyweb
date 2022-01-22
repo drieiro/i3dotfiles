@@ -1,10 +1,10 @@
 #!/bin/sh
 
-d=/media/drieiro/DATOS/DATA/httpshare
+d=/tmp/pyweb
 
 startserver() {
     cd $d || exit
-    nohup python3 -m http.server 8080 >/tmp/nohup.out 2>&1 &
+    nohup python3 -m http.server 8080 >/tmp/pyweb.log 2>&1 &
     echo "http://$(hostname -i):8080"
 }
 

@@ -18,5 +18,5 @@ bind-key N              prev-unread
 
 
 # Macros
-macro v set browser "mpv %u" ; open-in-browser ; set browser "brave-browser %u"
-macro s set browser "dpl -a %u" ; open-in-browser ; set browser "brave-browser %u"
+macro v set browser "mpv %u" ; open-in-browser ; set browser "firefox %u"
+macro s set browser "dpl -a %u" ; open-in-browser ; set browser "firefox %u"
